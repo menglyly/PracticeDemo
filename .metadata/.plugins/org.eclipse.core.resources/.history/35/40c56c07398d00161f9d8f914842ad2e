@@ -1,0 +1,321 @@
+package com.brt.bhphoneguard.register;
+
+import com.brt.bhphoneguard.config.BrtActivity;
+import com.brt.bhphoneguard.config.DoTaskOnBackground;
+import com.brt.bhphoneguard.config.DoTaskOnBackground.OnTaskFinishListener;
+import com.brt.bhphoneguard.config.GlobalParamConfig;
+import com.brt.bhphoneguard.customview.DelEditText;
+import com.brt.bhphoneguard.customview.TitleBarBack;
+import com.brt.bhphoneguard.main.LauncherActivity;
+import com.brt.bhphoneguard.main.R;
+import com.brt.bhphoneguard.net.AppConnection;
+import com.brt.bhphoneguard.utils.PhoneInfo;
+import com.brt.json.register.RegistData;
+import com.brt.json.register.RegistResult;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
+
+public class RegisterActivity extends BrtActivity {
+
+	private Button button_register;
+	private DelEditText layout_register_police_name;
+	private DelEditText layout_register_police_number;
+	private DelEditText layout_register_police_phone;
+	private DelEditText layout_register_police_psw;
+	private DelEditText layout_register_police_psw_confirm;
+	private String policeName;
+
+	private String policeNumber;
+
+	private String policePhone;
+
+	private String policePsw;
+
+	private String policePswConfirm;
+
+	private long selectedOrgId = -1;
+
+	private TextView textView_select_org;
+
+	private TitleBarBack titleView;
+	
+	private AppConnection appConnection;
+	
+	private String phoneImei;
+
+	private void goToRegister() {
+
+		 policeNumber = layout_register_police_number.editText_del_edit_content.getText().toString();
+
+		 policeName = layout_register_police_name.editText_del_edit_content.getText().toString();
+
+		 policePsw = layout_register_police_psw.editText_del_edit_content.getText().toString();
+
+		 policePswConfirm = layout_register_police_psw_confirm.editText_del_edit_content.getText().toString();
+
+		 policePhone = layout_register_police_phone.editText_del_edit_content.getText().toString();
+
+		
+		
+		if(policeNumber.length()<6){
+			Toast.makeText(this, "请您输入正确的警号", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		if(policeName.length()<2){
+			Toast.makeText(this, "请您的真实姓名", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		
+		
+//		checkPsw();
+		
+		/*if(policePhone==null||policePhone.isEmpty()){
+			policePhone=PhoneInfo.getInstance(this).getTelephone();
+		}*/
+		if(TextUtils.isEmpty(policePhone)){
+			
+		}
+		
+		if(selectedOrgId<0){
+			Toast.makeText(this, "请选择机构", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		phoneImei=PhoneInfo.getInstance(this).getImei();
+		
+		
+		
+		postRegister();
+	
+		
+		
+	}
+
+	public void checkPsw() {
+		if(policePsw.length()<6){
+			Toast.makeText(this, "密码长度不能少于6位", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		
+		if(!policePsw.equals(policePswConfirm)){
+			Toast.makeText(this, "两次密码不一致，请重新输入", Toast.LENGTH_LONG).show();
+			return;
+		}
+	}
+
+	private void goToSelectOrg() {
+
+		Intent intent = new Intent(this, SearchOrgActivity.class);
+
+		startActivityForResult(intent, 1);
+	}
+	private void initView() {
+		titleView = new TitleBarBack(findViewById(R.id.layout_register_title), "注册使用");
+		titleView.layout_back.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				RegisterActivity.this.finish();
+			}
+		});
+
+		layout_register_police_number = new DelEditText(findViewById(R.id.layout_register_police_number));
+
+		layout_register_police_name = new DelEditText(findViewById(R.id.layout_register_police_name));
+
+		layout_register_police_psw = new DelEditText(findViewById(R.id.layout_register_police_psw));
+
+		layout_register_police_psw_confirm = new DelEditText(findViewById(R.id.layout_register_police_psw_confirm));
+
+		layout_register_police_phone = new DelEditText(findViewById(R.id.layout_register_police_phone));
+
+		textView_select_org = (TextView) findViewById(R.id.textView_select_org);
+
+		button_register = (Button) findViewById(R.id.button_register);
+	}
+	public void initViewAttribute() {
+		layout_register_police_number.editText_del_edit_content.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+		layout_register_police_name.editText_del_edit_content.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+		
+		
+		layout_register_police_psw.editText_del_edit_content.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+		layout_register_police_psw_confirm.editText_del_edit_content.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+		textView_select_org.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		
+		layout_register_police_psw.editText_del_edit_content.setInputType(InputType.TYPE_CLASS_TEXT
+				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		
+		layout_register_police_psw_confirm.editText_del_edit_content.setInputType(InputType.TYPE_CLASS_TEXT
+				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		
+		layout_register_police_phone.editText_del_edit_content.setImeOptions(EditorInfo.IME_ACTION_DONE);
+	
+		
+		layout_register_police_number.editText_del_edit_content.requestFocus();
+	
+//		layout_register_police_number.editText_del_edit_content.setHint("请输入警号");
+//		layout_register_police_name.editText_del_edit_content.setHint("请输入您的姓名");
+//		layout_register_police_psw.editText_del_edit_content.setHint("请输密码");
+//		layout_register_police_psw_confirm.editText_del_edit_content.setHint("请再次输入密码");
+//		layout_register_police_phone.editText_del_edit_content.setHint("请输入您的联系电话");
+	
+	}
+	private void initViewCase() {
+
+		initViewAttribute();
+		
+		layout_register_police_name.editText_del_edit_content
+				.setOnEditorActionListener(new OnEditorActionListener() {
+
+					@Override
+					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+						if (actionId == EditorInfo.IME_ACTION_NEXT) {
+							goToSelectOrg();
+							return true;
+						}
+						return false;
+					}
+				});
+
+	
+		textView_select_org.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				goToSelectOrg();
+			}
+		});
+
+	
+		layout_register_police_phone.editText_del_edit_content
+		.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					goToRegister();
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		
+		button_register.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				goToRegister();
+
+			}
+		});
+
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == 1) {
+			if (resultCode == RESULT_OK) {
+				if (data != null && data.getExtras() != null) {
+					long orgId = data.getExtras().getLong("orgId");
+					String orgName = data.getExtras().getString("orgName");
+					selectedOrgId = orgId;
+					textView_select_org.setText(orgName);
+				}
+
+			}
+			layout_register_police_phone.editText_del_edit_content.requestFocus();
+			InputMethodManager inputMethodManager=(InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+			inputMethodManager.showSoftInput(this.getCurrentFocus(),
+					InputMethodManager.SHOW_FORCED);
+			
+		}
+
+	}
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.setContentView(R.layout.activity_register);
+		
+		appConnection=GlobalParamConfig.initAppConnection(this);
+		
+		initView();
+
+		initViewCase();
+	}
+
+	private void postRegister() {
+		
+		DoTaskOnBackground background=new DoTaskOnBackground(this){
+
+			@Override
+			public void doTask() throws Exception {
+				
+				RegistData postData=new RegistData();
+				postData.name=policeName;
+				postData.code=policeNumber;
+				postData.imei=phoneImei;
+				postData.orgId=selectedOrgId;
+				postData.contactNumber=policePhone;
+				
+				String resultStr=appConnection.sendDataHadAuthorization("policeRegisters", postData.toString(),false);
+				
+				RegistResult resultData=new RegistResult();
+				resultData.setDataByJson(resultStr);
+				
+				this.getBundle().putBoolean("success", resultData.meta.success);
+				
+				this.getBundle().putString("message", resultData.meta.message);
+				
+			}
+			
+		};
+		background.setOnTaskFinishListener(new OnTaskFinishListener() {
+			
+			@Override
+			public void onFinish(DoTaskOnBackground background) {
+				boolean success=background.getBundle().getBoolean("success");
+				String message=background.getBundle().getString("message");
+				
+				if(message!=null){
+					Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show();
+				}
+				
+				if(success){
+					reLauncher();
+					finish();
+				}
+				
+			}
+		});
+		
+		background.run("正在注册，请稍等...");
+	}
+
+	private void reLauncher(){
+		Intent intent = new Intent(this, LauncherActivity.class);
+
+		startActivity(intent);
+	}
+}
