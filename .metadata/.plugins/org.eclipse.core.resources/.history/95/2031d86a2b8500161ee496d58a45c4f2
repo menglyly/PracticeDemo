@@ -1,0 +1,17 @@
+package com.weimenglyly.actionbartest;
+
+import android.app.Activity;
+import android.view.Menu;
+import android.view.MenuInflater;
+
+public class MainActivity extends Activity {
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//∂‘actionbar≥ı ºªØ
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_main_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+}

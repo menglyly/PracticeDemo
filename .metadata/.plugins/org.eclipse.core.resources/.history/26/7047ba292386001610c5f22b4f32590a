@@ -1,0 +1,81 @@
+package com.weimenglyly.actionbartest;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+
+public class MainActivity extends Activity {
+	public static  final int REFRESH = 1;
+	
+	
+	Handler myHandler = new Handler() {
+		// 接收到消息后处理
+		public void handleMessage(Message msg) {
+		switch (msg.what) {
+		case REFRESH:
+		//mGameView.invalidate(); // 刷新界面
+		break;
+		}
+
+		super.handleMessage(msg);
+		}
+		};
+		
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
+		new Thread(new GameThread()).start();
+		// 实例化一个handler
+
+		
+	}
+	
+	
+	class GameThread implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			while (!Thread.currentThread().isInterrupted()) {
+				Message message = new Message();
+				message.what = MainActivity.REFRESH;
+				// 发送消息
+				MainActivity.this.myHandler.sendMessage(message);
+				try {
+				Thread.sleep(100);
+				} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				}
+				}
+		}
+		
+	}
+	/*@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//对actionbar初始化
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_main_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	   @Override
+	  public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    // action with ID action_refresh was selected
+	    case R.id.action_refresh:
+	      Toast.makeText(this, "Refresh selected", Toast.LENGTH_SHORT)
+	          .show();
+	      break;
+	    // action with ID action_settings was selected
+	    case R.id.action_settings:
+	      Toast.makeText(this, "Settings selected", Toast.LENGTH_LONG).show();
+	      break;
+	    default:
+	      break;
+	    }
+	    return true;
+	  }
+*/
+}

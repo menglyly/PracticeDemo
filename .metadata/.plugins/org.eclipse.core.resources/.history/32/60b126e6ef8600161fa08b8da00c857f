@@ -1,0 +1,13 @@
+package com.weimenglyly.slideactivity;
+
+import android.view.ViewGroup;
+
+public class SlideView extends ViewGroup {
+
+	@Override
+	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,50 @@
+package com.weimenglyly.actionbartest;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+public class MainActivity extends Activity {
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		new Thread(new GameThread()).start();
+	}
+	
+	
+	class GameThread implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	/*@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//∂‘actionbar≥ı ºªØ
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_main_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	   @Override
+	  public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    // action with ID action_refresh was selected
+	    case R.id.action_refresh:
+	      Toast.makeText(this, "Refresh selected", Toast.LENGTH_SHORT)
+	          .show();
+	      break;
+	    // action with ID action_settings was selected
+	    case R.id.action_settings:
+	      Toast.makeText(this, "Settings selected", Toast.LENGTH_LONG).show();
+	      break;
+	    default:
+	      break;
+	    }
+	    return true;
+	  }
+*/
+}
