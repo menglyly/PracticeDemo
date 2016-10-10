@@ -1,0 +1,22 @@
+package com.weimenglyly.actionbartest;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.EditText;
+
+public class SecondActivity extends Activity {
+	private String number;
+	public EditText editText;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		this.setContentView(R.layout.second_activity);
+		editText = new EditText(R.id.editText_del_edit_content)
+		
+		number =editText.getText().toString();
+		
+		
+	}
+
+}

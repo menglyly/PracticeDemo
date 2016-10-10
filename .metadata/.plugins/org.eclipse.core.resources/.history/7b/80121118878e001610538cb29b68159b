@@ -1,0 +1,12 @@
+<resources>
+
+
+    <style name="AppBaseTheme" parent="android:Theme.Material.Light">
+        <!-- API 14 theme customizations can go here.
+         <item name="android:textColor">#FF2D2D2D</item> -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+       <item name="android:textColor">@color/gray</item>
+    </style>
+
+</resources>

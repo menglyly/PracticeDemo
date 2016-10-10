@@ -1,7 +1,0 @@
-package com.weimenglyly.actionbartest;
-
-import android.widget.ViewFlipper;
-
-public class SignCalendar extends ViewFlipper {
-
-}

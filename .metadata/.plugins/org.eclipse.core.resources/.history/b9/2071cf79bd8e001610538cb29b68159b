@@ -1,0 +1,61 @@
+package com.weimenglyly.hellopager;
+
+
+import java.util.List;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+
+public class MainActivity extends Activity implements  OnClickListener, OnPageChangeListener{
+	
+	private ViewPager vp;  
+    private ViewPagerAdapter vpAdapter;  
+    private List<View> views;  
+      
+    //引导图片资源  
+    private static final int[] pics = { R.drawable.nature1,  
+            R.drawable.nature2, R.drawable.nature3,  
+            R.drawable.natrue4};  
+      
+    //底部小店图片  
+    private ImageView[] dots ;  
+      
+    //记录当前选中位置  
+    private int currentIndex;  
+    
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+	}
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+}
